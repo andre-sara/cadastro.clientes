@@ -1,26 +1,406 @@
+
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>financeiro-domestico-online</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gerenciamento Financeiro</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Tela de Login -->
+    <div id="login-screen" class="screen active">
+      <div class="auth-container">
+        <div class="logo">
+          <i class="fas fa-store"></i>
+          <h1>FinanceMercado</h1>
+        </div>
+        <div class="auth-form">
+          <h2>Login</h2>
+          <div class="input-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" placeholder="Digite seu usuário">
+          </div>
+          <div class="input-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" placeholder="Digite sua senha">
+          </div>
+          <button id="login-btn" class="primary-btn">Entrar</button>
+          <p class="forgot-password">Esqueceu sua senha? <a href="#" id="forgot-password-link">Recuperar</a></p>
+        </div>
+      </div>
+    </div>
 
-    <meta property="og:title" content="financeiro-domestico-online" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Tela de Recuperação de Senha -->
+    <div id="recovery-screen" class="screen">
+      <div class="auth-container">
+        <div class="logo">
+          <i class="fas fa-store"></i>
+          <h1>FinanceMercado</h1>
+        </div>
+        <div class="auth-form">
+          <h2>Recuperação de Senha</h2>
+          <div class="input-group">
+            <label for="recovery-email">E-mail</label>
+            <input type="email" id="recovery-email" placeholder="Digite seu e-mail">
+          </div>
+          <button id="recovery-btn" class="primary-btn">Recuperar Senha</button>
+          <p class="back-to-login">Lembrou sua senha? <a href="#" id="back-to-login">Voltar para Login</a></p>
+        </div>
+      </div>
+    </div>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+    <!-- Tela Principal (Dashboard) -->
+    <div id="dashboard-screen" class="screen">
+      <header>
+        <div class="header-left">
+          <i class="fas fa-store logo-icon"></i>
+          <h1>FinanceMercado</h1>
+        </div>
+        <div class="header-right">
+          <button id="dark-mode-toggle" class="icon-btn">
+            <i class="fas fa-moon"></i>
+          </button>
+          <div class="user-menu">
+            <span id="username-display">Usuário</span>
+            <button id="logout-btn" class="icon-btn">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+      </header>
 
-  <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+      <nav>
+        <ul>
+          <li><a href="#" class="nav-link active" data-page="home">Início</a></li>
+          <li><a href="#" class="nav-link" data-page="clients">Clientes</a></li>
+          <li><a href="#" class="nav-link" data-page="payments">Pagamentos</a></li>
+          <li><a href="#" class="nav-link" data-page="reports">Relatórios</a></li>
+          <li id="admin-link"><a href="#" class="nav-link" data-page="admin">Administração</a></li>
+        </ul>
+      </nav>
+
+      <main>
+        <!-- Página Inicial -->
+        <section id="home-page" class="page active">
+          <h2>Dashboard</h2>
+          <div class="stats-container">
+            <div class="stat-card">
+              <h3>Clientes</h3>
+              <p class="stat-number" id="client-count">0</p>
+              <i class="fas fa-users stat-icon"></i>
+            </div>
+            <div class="stat-card">
+              <h3>Pagamentos Pendentes</h3>
+              <p class="stat-number" id="pending-count">0</p>
+              <i class="fas fa-clock stat-icon"></i>
+            </div>
+            <div class="stat-card">
+              <h3>Pagamentos Hoje</h3>
+              <p class="stat-number" id="today-count">0</p>
+              <i class="fas fa-calendar-day stat-icon"></i>
+            </div>
+            <div class="stat-card">
+              <h3>Total Recebido (Mês)</h3>
+              <p class="stat-number" id="month-total">R$ 0,00</p>
+              <i class="fas fa-money-bill-wave stat-icon"></i>
+            </div>
+          </div>
+
+          <div class="recent-container">
+            <div class="recent-section">
+              <h3>Pagamentos Recentes</h3>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Valor</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-payments">
+                  <!-- Será preenchido via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="recent-section">
+              <h3>Clientes com Pendências</h3>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Valor Pendente</th>
+                    <th>Desde</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="pending-clients">
+                  <!-- Será preenchido via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Página de Clientes -->
+        <section id="clients-page" class="page">
+          <h2>Gerenciamento de Clientes</h2>
+          <div class="search-bar">
+            <input type="text" id="client-search" placeholder="Procurar cliente...">
+            <button id="search-btn" class="icon-btn"><i class="fas fa-search"></i></button>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Telefone</th>
+                <th>Saldo Pendente</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="clients-list">
+              <!-- Será preenchido via JavaScript -->
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Página de Pagamentos -->
+        <section id="payments-page" class="page">
+          <h2>Registro de Pagamentos</h2>
+          
+          <div class="form-container">
+            <div class="input-group">
+              <label for="payment-client">Cliente</label>
+              <select id="payment-client">
+                <option value="">Selecione um cliente</option>
+                <!-- Opções serão preenchidas via JavaScript -->
+              </select>
+            </div>
+            
+            <div class="input-group">
+              <label for="payment-value">Valor (R$)</label>
+              <input type="number" id="payment-value" step="0.01" min="0">
+            </div>
+            
+            <div class="input-group">
+              <label for="payment-type">Tipo de Pagamento</label>
+              <select id="payment-type">
+                <option value="cash">À Vista</option>
+                <option value="credit">A Prazo</option>
+              </select>
+            </div>
+            
+            <div class="input-group" id="due-date-group" style="display: none;">
+              <label for="payment-due-date">Data de Vencimento</label>
+              <input type="date" id="payment-due-date">
+            </div>
+            
+            <div class="input-group">
+              <label for="payment-notes">Observações</label>
+              <textarea id="payment-notes"></textarea>
+            </div>
+            
+            <button id="register-payment-btn" class="primary-btn">Registrar Pagamento</button>
+          </div>
+          
+          <h3>Histórico de Pagamentos</h3>
+          <div class="search-bar">
+            <input type="text" id="payment-search" placeholder="Procurar pagamento...">
+            <button class="icon-btn"><i class="fas fa-search"></i></button>
+          </div>
+          
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Valor</th>
+                <th>Tipo</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="payments-list">
+              <!-- Será preenchido via JavaScript -->
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Página de Relatórios -->
+        <section id="reports-page" class="page">
+          <h2>Relatórios</h2>
+          
+          <div class="filters-container">
+            <div class="input-group">
+              <label for="report-type">Tipo de Relatório</label>
+              <select id="report-type">
+                <option value="monthly">Mensal</option>
+                <option value="client">Por Cliente</option>
+                <option value="pending">Pendências</option>
+              </select>
+            </div>
+            
+            <div class="input-group" id="report-month-group">
+              <label for="report-month">Mês</label>
+              <input type="month" id="report-month">
+            </div>
+            
+            <div class="input-group" id="report-client-group" style="display: none;">
+              <label for="report-client">Cliente</label>
+              <select id="report-client">
+                <option value="">Selecione um cliente</option>
+                <!-- Opções serão preenchidas via JavaScript -->
+              </select>
+            </div>
+            
+            <button id="generate-report-btn" class="primary-btn">Gerar Relatório</button>
+          </div>
+          
+          <div id="report-result" class="report-container">
+            <!-- Será preenchido via JavaScript -->
+          </div>
+        </section>
+
+        <!-- Página de Administração -->
+        <section id="admin-page" class="page">
+          <h2>Administração</h2>
+          
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="client-register">Cadastrar Cliente</button>
+            <button class="tab-btn" data-tab="user-manage">Gerenciar Usuários</button>
+            <button class="tab-btn" data-tab="system-settings">Configurações</button>
+          </div>
+          
+          <div id="client-register" class="tab-content active">
+            <h3>Cadastro de Cliente</h3>
+            <div class="form-container">
+              <div class="input-group">
+                <label for="client-name">Nome Completo</label>
+                <input type="text" id="client-name" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="client-cpf">CPF</label>
+                <input type="text" id="client-cpf" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="client-rg">RG</label>
+                <input type="text" id="client-rg">
+              </div>
+              
+              <div class="input-group">
+                <label for="client-phone">Telefone</label>
+                <input type="text" id="client-phone" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="client-address">Endereço</label>
+                <textarea id="client-address"></textarea>
+              </div>
+              
+              <div class="input-group">
+                <label for="client-notes">Observações</label>
+                <textarea id="client-notes"></textarea>
+              </div>
+              
+              <button id="register-client-btn" class="primary-btn">Cadastrar Cliente</button>
+            </div>
+          </div>
+          
+          <div id="user-manage" class="tab-content">
+            <h3>Gerenciamento de Usuários</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Usuário</th>
+                  <th>Função</th>
+                  <th>Último Acesso</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="users-list">
+                <!-- Será preenchido via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div id="system-settings" class="tab-content">
+            <h3>Configurações do Sistema</h3>
+            <div class="form-container">
+              <div class="input-group">
+                <label for="store-name">Nome da Loja</label>
+                <input type="text" id="store-name">
+              </div>
+              
+              <div class="input-group">
+                <label for="default-theme">Tema Padrão</label>
+                <select id="default-theme">
+                  <option value="light">Claro</option>
+                  <option value="dark">Escuro</option>
+                </select>
+              </div>
+              
+              <button id="save-settings-btn" class="primary-btn">Salvar Configurações</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modais -->
+    <div id="client-details-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Detalhes do Cliente</h2>
+        <div id="client-details">
+          <!-- Será preenchido via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <div id="payment-details-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Detalhes do Pagamento</h2>
+        <div id="payment-details">
+          <!-- Será preenchido via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <div id="confirm-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Confirmação</h2>
+        <p id="confirm-message"></p>
+        <div class="modal-buttons">
+          <button id="confirm-yes" class="primary-btn">Sim</button>
+          <button id="confirm-no" class="secondary-btn">Não</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="alert-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="alert-title">Alerta</h2>
+        <p id="alert-message"></p>
+        <div class="modal-buttons">
+          <button id="alert-ok" class="primary-btn">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  <script src="script.js"></script>
+</body>
 </html>
