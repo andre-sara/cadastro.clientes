@@ -360,11 +360,58 @@
           
           <div id="user-manage" class="tab-content">
             <h3>Gerenciamento de Usuários</h3>
+            
+            <div class="form-container">
+              <h4>Cadastrar Novo Usuário</h4>
+              <div class="input-group">
+                <label for="new-user-username">Nome de Usuário*</label>
+                <input type="text" id="new-user-username" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="new-user-password">Senha*</label>
+                <input type="password" id="new-user-password" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="new-user-fullname">Nome Completo*</label>
+                <input type="text" id="new-user-fullname" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="new-user-mother">Nome da Mãe*</label>
+                <input type="text" id="new-user-mother" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="new-user-father">Nome do Pai*</label>
+                <input type="text" id="new-user-father" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="new-user-child">Nome de um Filho*</label>
+                <input type="text" id="new-user-child" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="new-user-dog">Nome do Cachorro*</label>
+                <input type="text" id="new-user-dog" required>
+              </div>
+              
+              <div class="input-group">
+                <label for="new-user-cat">Nome do Gato*</label>
+                <input type="text" id="new-user-cat" required>
+              </div>
+              
+              <button onclick="registerUser()" class="primary-btn">Cadastrar Usuário</button>
+            </div>
+
+            <h4>Usuários Cadastrados</h4>
             <table class="data-table">
               <thead>
                 <tr>
                   <th>Usuário</th>
-                  <th>Função</th>
+                  <th>Nome Completo</th>
                   <th>Último Acesso</th>
                   <th>Ações</th>
                 </tr>

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeApp() {
   // Verificar se já existem dados de usuários
   if (!localStorage.getItem('users')) {
-    // Criar usuários padrão
+    // Criar apenas o usuário admin
     const defaultUsers = [
       { 
         username: 'admin', 
@@ -28,20 +28,6 @@ function initializeApp() {
           childName: 'Pedro Silva',
           dogName: 'Rex',
           catName: 'Felix'
-        }
-      },
-      { 
-        username: 'operador', 
-        password: 'operador123', 
-        role: 'operator', 
-        lastLogin: null,
-        securityQuestions: {
-          fullName: 'Operador Sistema',
-          motherName: 'Ana Santos',
-          fatherName: 'José Santos',
-          childName: 'Maria Santos',
-          dogName: 'Thor',
-          catName: 'Luna'
         }
       }
     ];
@@ -224,6 +210,9 @@ function setupEventListeners() {
     const searchTerm = this.value.toLowerCase();
     filterPaymentsList(searchTerm);
   });
+  
+  // Adicionar evento para cadastrar usuário
+  document.getElementById('register-user-btn').addEventListener('click', registerUser);
 }
 
 // Alternar entre telas (login, dashboard, etc)
@@ -1551,6 +1540,110 @@ function loadPendingClients() {
       const clientId = parseInt(this.getAttribute('data-id'));
       showClientDetails(clientId);
     });
+  });
+}
+
+// Adicionar função para cadastrar usuário
+function registerUser() {
+  const username = document.getElementById('new-user-username').value;
+  const password = document.getElementById('new-user-password').value;
+  const fullName = document.getElementById('new-user-fullname').value;
+  const motherName = document.getElementById('new-user-mother').value;
+  const fatherName = document.getElementById('new-user-father').value;
+  const childName = document.getElementById('new-user-child').value;
+  const dogName = document.getElementById('new-user-dog').value;
+  const catName = document.getElementById('new-user-cat').value;
+
+  if (!username || !password || !fullName || !motherName || !fatherName || !childName || !dogName || !catName) {
+    showAlert('Erro', 'Por favor, preencha todos os campos.');
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  
+  // Verificar se usuário já existe
+  if (users.some(u => u.username === username)) {
+    showAlert('Erro', 'Nome de usuário já existe.');
+    return;
+  }
+
+  // Criar novo usuário
+  const newUser = {
+    username,
+    password,
+    role: 'operator',
+    lastLogin: null,
+    securityQuestions: {
+      fullName,
+      motherName,
+      fatherName,
+      childName,
+      dogName,
+      catName
+    }
+  };
+
+  users.push(newUser);
+  localStorage.setItem('users', JSON.stringify(users));
+  
+  // Limpar formulário
+  document.getElementById('new-user-username').value = '';
+  document.getElementById('new-user-password').value = '';
+  document.getElementById('new-user-fullname').value = '';
+  document.getElementById('new-user-mother').value = '';
+  document.getElementById('new-user-father').value = '';
+  document.getElementById('new-user-child').value = '';
+  document.getElementById('new-user-dog').value = '';
+  document.getElementById('new-user-cat').value = '';
+
+  showAlert('Sucesso', 'Usuário cadastrado com sucesso!');
+  loadUsersList();
+}
+
+// Função para carregar lista de usuários
+function loadUsersList() {
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  const usersList = document.getElementById('users-list');
+  
+  usersList.innerHTML = '';
+  
+  users.forEach(user => {
+    if (user.role !== 'admin') { // Não mostrar o admin na lista
+      const row = document.createElement('tr');
+      
+      row.innerHTML = `
+        <td>${user.username}</td>
+        <td>${user.securityQuestions.fullName}</td>
+        <td>${user.lastLogin ? formatDate(user.lastLogin) : 'Nunca'}</td>
+        <td>
+          <button class="icon-btn delete-user" data-username="${user.username}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      `;
+      
+      usersList.appendChild(row);
+    }
+  });
+  
+  // Adicionar eventos aos botões de exclusão
+  document.querySelectorAll('.delete-user').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const username = this.getAttribute('data-username');
+      deleteUser(username);
+    });
+  });
+}
+
+// Função para deletar usuário
+function deleteUser(username) {
+  showConfirm('Tem certeza que deseja excluir este usuário?', function() {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const updatedUsers = users.filter(u => u.username !== username);
+    
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+    loadUsersList();
+    showAlert('Sucesso', 'Usuário excluído com sucesso!');
   });
 }
 
