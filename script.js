@@ -32,6 +32,16 @@ function initializeApp() {
       }
     ];
     localStorage.setItem('users', JSON.stringify(defaultUsers));
+  } else {
+    // Remover qualquer usuário "operator" existente
+    let users = JSON.parse(localStorage.getItem('users') || '[]');
+    const filteredUsers = users.filter(user => user.username !== 'operator');
+    
+    // Se houve alguma mudança, salvar os usuários filtrados
+    if (users.length !== filteredUsers.length) {
+      localStorage.setItem('users', JSON.stringify(filteredUsers));
+      console.log('Usuário "operator" removido com sucesso');
+    }
   }
   
   // Verificar se já existem dados de clientes
@@ -113,6 +123,9 @@ function initializeApp() {
   
   // Preencher selects de clientes
   populateClientSelects();
+  
+  // Carregar lista de usuários
+  loadUsersList();
 }
 
 // Configuração de todos os ouvintes de eventos
@@ -1604,6 +1617,8 @@ function registerUser() {
 function loadUsersList() {
   const users = JSON.parse(localStorage.getItem('users') || '[]');
   const usersList = document.getElementById('users-list');
+  
+  if (!usersList) return; // Verificar se o elemento existe
   
   usersList.innerHTML = '';
   
