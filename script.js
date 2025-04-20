@@ -1,4 +1,3 @@
-
 // Configuração inicial do aplicativo
 document.addEventListener('DOMContentLoaded', function() {
   // Inicialização de dados
@@ -17,8 +16,34 @@ function initializeApp() {
   if (!localStorage.getItem('users')) {
     // Criar usuários padrão
     const defaultUsers = [
-      { username: 'admin', password: 'admin123', role: 'admin', lastLogin: null },
-      { username: 'operador', password: 'operador123', role: 'operator', lastLogin: null }
+      { 
+        username: 'admin', 
+        password: 'admin123', 
+        role: 'admin', 
+        lastLogin: null,
+        securityQuestions: {
+          fullName: 'Administrador Principal',
+          motherName: 'Maria Silva',
+          fatherName: 'João Silva',
+          childName: 'Pedro Silva',
+          dogName: 'Rex',
+          catName: 'Felix'
+        }
+      },
+      { 
+        username: 'operador', 
+        password: 'operador123', 
+        role: 'operator', 
+        lastLogin: null,
+        securityQuestions: {
+          fullName: 'Operador Sistema',
+          motherName: 'Ana Santos',
+          fatherName: 'José Santos',
+          childName: 'Maria Santos',
+          dogName: 'Thor',
+          catName: 'Luna'
+        }
+      }
     ];
     localStorage.setItem('users', JSON.stringify(defaultUsers));
   }
@@ -306,21 +331,78 @@ function handleLogout() {
 }
 
 function handlePasswordRecovery() {
-  const email = document.getElementById('recovery-email').value;
+  const fullName = document.getElementById('recovery-fullname').value;
+  const motherName = document.getElementById('recovery-mother').value;
+  const fatherName = document.getElementById('recovery-father').value;
+  const childName = document.getElementById('recovery-child').value;
+  const dogName = document.getElementById('recovery-dog').value;
+  const catName = document.getElementById('recovery-cat').value;
   
-  if (!email) {
-    showAlert('Erro', 'Por favor, digite seu e-mail.');
+  if (!fullName || !motherName || !fatherName) {
+    showAlert('Erro', 'Por favor, preencha pelo menos nome completo, nome da mãe e nome do pai.');
     return;
   }
   
-  // Simulação de recuperação (na prática, enviaria e-mail)
-  showAlert('Recuperação de Senha', 'Se este e-mail estiver cadastrado, você receberá as instruções de recuperação.');
+  const users = JSON.parse(localStorage.getItem('users') || '[]');
+  const user = users.find(u => {
+    const sq = u.securityQuestions;
+    let matches = 0;
+    let total = 0;
+    
+    if (fullName) {
+      total++;
+      if (sq.fullName.toLowerCase() === fullName.toLowerCase()) matches++;
+    }
+    if (motherName) {
+      total++;
+      if (sq.motherName.toLowerCase() === motherName.toLowerCase()) matches++;
+    }
+    if (fatherName) {
+      total++;
+      if (sq.fatherName.toLowerCase() === fatherName.toLowerCase()) matches++;
+    }
+    if (childName) {
+      total++;
+      if (sq.childName.toLowerCase() === childName.toLowerCase()) matches++;
+    }
+    if (dogName) {
+      total++;
+      if (sq.dogName.toLowerCase() === dogName.toLowerCase()) matches++;
+    }
+    if (catName) {
+      total++;
+      if (sq.catName.toLowerCase() === catName.toLowerCase()) matches++;
+    }
+    
+    // Requer pelo menos 80% de correspondência nas respostas fornecidas
+    return matches / total >= 0.8;
+  });
   
-  // Voltar para tela de login
-  setTimeout(() => {
-    hideModal('alert-modal');
-    showScreen('login-screen');
-  }, 3000);
+  if (user) {
+    // Mostrar formulário de redefinição de senha
+    document.getElementById('recovery-questions').style.display = 'none';
+    document.getElementById('reset-password').style.display = 'block';
+    
+    // Adicionar evento para salvar nova senha
+    document.getElementById('save-password').onclick = function() {
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      
+      if (newPassword !== confirmPassword) {
+        showAlert('Erro', 'As senhas não coincidem.');
+        return;
+      }
+      
+      const userIndex = users.findIndex(u => u.username === user.username);
+      users[userIndex].password = newPassword;
+      localStorage.setItem('users', JSON.stringify(users));
+      
+      showAlert('Sucesso', 'Senha alterada com sucesso!');
+      showScreen('login-screen');
+    };
+  } else {
+    showAlert('Erro', 'Informações inconsistentes. Por favor, verifique os dados fornecidos.', 'error');
+  }
 }
 
 // Tema escuro

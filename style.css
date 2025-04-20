@@ -1,4 +1,3 @@
-
 /* Variáveis CSS para Tema Claro */
 :root {
   --bg-color: #f5f7fa;
@@ -534,4 +533,42 @@ nav li {
   .header-left h1 {
     font-size: 20px;
   }
+}
+
+/* Estilos para mensagens de erro */
+.error-message {
+  color: #ea384c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: none;
+}
+
+.input-group.error input {
+  border-color: #ea384c;
+}
+
+.input-group.error .error-message {
+  display: block;
+}
+
+/* Estilos para formulário de recuperação */
+#recovery-questions,
+#reset-password {
+  width: 100%;
+}
+
+.auth-form .input-group label {
+  color: #666;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.auth-form .input-group label::after {
+  content: "*";
+  color: #ea384c;
+  margin-left: 0.25rem;
+}
+
+.auth-form .input-group label:not([for="recovery-child"]):not([for="recovery-dog"]):not([for="recovery-cat"])::after {
+  display: inline;
 }

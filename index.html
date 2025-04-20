@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -42,11 +41,55 @@
         </div>
         <div class="auth-form">
           <h2>Recuperação de Senha</h2>
-          <div class="input-group">
-            <label for="recovery-email">E-mail</label>
-            <input type="email" id="recovery-email" placeholder="Digite seu e-mail">
+          
+          <div id="recovery-questions">
+            <div class="input-group">
+              <label for="recovery-fullname">Nome Completo*</label>
+              <input type="text" id="recovery-fullname" placeholder="Digite seu nome completo" required>
+            </div>
+            
+            <div class="input-group">
+              <label for="recovery-mother">Nome da Mãe*</label>
+              <input type="text" id="recovery-mother" placeholder="Digite o nome da sua mãe" required>
+            </div>
+            
+            <div class="input-group">
+              <label for="recovery-father">Nome do Pai*</label>
+              <input type="text" id="recovery-father" placeholder="Digite o nome do seu pai" required>
+            </div>
+            
+            <div class="input-group">
+              <label for="recovery-child">Nome de um Filho</label>
+              <input type="text" id="recovery-child" placeholder="Digite o nome de um filho">
+            </div>
+            
+            <div class="input-group">
+              <label for="recovery-dog">Nome do Cachorro</label>
+              <input type="text" id="recovery-dog" placeholder="Digite o nome do seu cachorro">
+            </div>
+            
+            <div class="input-group">
+              <label for="recovery-cat">Nome do Gato</label>
+              <input type="text" id="recovery-cat" placeholder="Digite o nome do seu gato">
+            </div>
+            
+            <button id="recovery-btn" class="primary-btn">Verificar Informações</button>
           </div>
-          <button id="recovery-btn" class="primary-btn">Recuperar Senha</button>
+          
+          <div id="reset-password" style="display: none;">
+            <div class="input-group">
+              <label for="new-password">Nova Senha</label>
+              <input type="password" id="new-password" placeholder="Digite a nova senha">
+            </div>
+            
+            <div class="input-group">
+              <label for="confirm-password">Confirmar Senha</label>
+              <input type="password" id="confirm-password" placeholder="Confirme a nova senha">
+            </div>
+            
+            <button id="save-password" class="primary-btn">Salvar Nova Senha</button>
+          </div>
+          
           <p class="back-to-login">Lembrou sua senha? <a href="#" id="back-to-login">Voltar para Login</a></p>
         </div>
       </div>
