@@ -338,8 +338,9 @@ function handlePasswordRecovery() {
   const dogName = document.getElementById('recovery-dog').value;
   const catName = document.getElementById('recovery-cat').value;
   
-  if (!fullName || !motherName || !fatherName) {
-    showAlert('Erro', 'Por favor, preencha pelo menos nome completo, nome da mãe e nome do pai.');
+  // Check if all fields are filled
+  if (!fullName || !motherName || !fatherName || !childName || !dogName || !catName) {
+    showAlert('Erro', 'Por favor, preencha todos os campos de segurança.');
     return;
   }
   
@@ -347,35 +348,17 @@ function handlePasswordRecovery() {
   const user = users.find(u => {
     const sq = u.securityQuestions;
     let matches = 0;
-    let total = 0;
+    let total = 6; // Total number of security questions
     
-    if (fullName) {
-      total++;
-      if (sq.fullName.toLowerCase() === fullName.toLowerCase()) matches++;
-    }
-    if (motherName) {
-      total++;
-      if (sq.motherName.toLowerCase() === motherName.toLowerCase()) matches++;
-    }
-    if (fatherName) {
-      total++;
-      if (sq.fatherName.toLowerCase() === fatherName.toLowerCase()) matches++;
-    }
-    if (childName) {
-      total++;
-      if (sq.childName.toLowerCase() === childName.toLowerCase()) matches++;
-    }
-    if (dogName) {
-      total++;
-      if (sq.dogName.toLowerCase() === dogName.toLowerCase()) matches++;
-    }
-    if (catName) {
-      total++;
-      if (sq.catName.toLowerCase() === catName.toLowerCase()) matches++;
-    }
+    if (sq.fullName.toLowerCase() === fullName.toLowerCase()) matches++;
+    if (sq.motherName.toLowerCase() === motherName.toLowerCase()) matches++;
+    if (sq.fatherName.toLowerCase() === fatherName.toLowerCase()) matches++;
+    if (sq.childName.toLowerCase() === childName.toLowerCase()) matches++;
+    if (sq.dogName.toLowerCase() === dogName.toLowerCase()) matches++;
+    if (sq.catName.toLowerCase() === catName.toLowerCase()) matches++;
     
-    // Requer pelo menos 80% de correspondência nas respostas fornecidas
-    return matches / total >= 0.8;
+    // All fields must match exactly
+    return matches === total;
   });
   
   if (user) {
